@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>史努比風格 - 個人形象網頁</title>
+    <!-- 引入美觀的幾何/手繪感字型 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* 史努比經典配色系 */
+            --bg-color: #FFF9E6;        /* 經典暖黃白底色 */
+            --snoopy-red: #E63946;     /* 史努比狗屋紅 */
+            --snoopy-yellow: #FFB703;  /* 胡士托黃 */
+            --snoopy-blue: #A8DADC;    /* 經典天空藍 */
+            --ink-black: #1D1E2C;      /* 手繪墨水黑 */
+            --paper-white: #FFFFFF;    /* 紙張純白 */
+            
+            /* 手繪風格黑框與陰影 */
+            --comic-border: 3px solid #1D1E2C;
+            --thick-border: 4px solid #1D1E2C;
+            --shadow-pop: 5px 5px 0px #1D1E2C;
+            --shadow-hover: 8px 8px 0px #1D1E2C;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Fredoka', 'Noto Sans TC', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--ink-black);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-image: radial-gradient(var(--snoopy-yellow) 10%, transparent 11%);
+            background-size: 30px 30px;
+        }
+
+        header {
+            background-color: var(--paper-white);
+            border-bottom: var(--thick-border);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--ink-black);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-badge {
+            background-color: var(--snoopy-red);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            border: var(--comic-border);
+            font-size: 0.9rem;
+        }
+
+        /* 純 CSS 分頁導覽切換 (不需 JS) */
+        nav {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        nav label {
+            padding: 0.6rem 1.2rem;
+            background-color: var(--paper-white);
+            border: var(--comic-border);
+            border-radius: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 3px 3px 0px var(--ink-black);
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        nav label:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0px var(--ink-black);
+            background-color: var(--snoopy-yellow);
+        }
+
+        /* 隱藏Radio Input */
+        input[type="radio"] {
+            display: none;
+        }
+
+        /* 被選中的分頁切換樣式 */
+        #tab-about:checked ~ header nav label[for="tab-about"],
+        #tab-portfolio:checked ~ header nav label[for="tab-portfolio"],
+        #tab-contact:checked ~ header nav label[for="tab-contact"] {
+            background-color: var(--snoopy-red);
+            color: white;
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px var(--ink-black);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            flex-grow: 1;
+            width: 100%;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 根據 Radio 狀態顯示對應頁面 */
+        #tab-about:checked ~ main .page-about,
+        #tab-portfolio:checked ~ main .page-portfolio,
+        #tab-contact:checked ~ main .page-contact {
+            display: block;
+        }
+
+        .comic-card {
+            background-color: var(--paper-white);
+            border: var(--thick-border);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow-pop);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .comic-header {
+            border-bottom: var(--comic-border);
+            padding-bottom: 0.8rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .comic-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* 經典漫畫對話框風格 */
+        .speech-bubble {
+            position: relative;
+            background: var(--paper-white);
+            border: var(--comic-border);
+            border-radius: 18px;
+            padding: 1.2rem 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 4px 4px 0px var(--ink-black);
+            font-weight: 600;
+        }
+
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 40px;
+            border-width: 15px 15px 0;
+            border-style: solid;
+            border-color: var(--paper-white) transparent;
+            display: block;
+            width: 0;
+            z-index: 1;
+        }
+
+        .speech-bubble::before {
+            content: '';
+            position: absolute;
+            bottom: -19px;
+            left: 38px;
+            border-width: 17px 17px 0;
+            border-style: solid;
+            border-color: var(--ink-black) transparent;
+            display: block;
+            width: 0;
+            z-index: 0;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .avatar-box {
+            width: 180px;
+            height: 180px;
+            background-color: var(--snoopy-blue);
+            border: var(--thick-border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            box-shadow: 4px 4px 0px var(--ink-black);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* 用 CSS 純手工畫一個簡易史努比風耳朵大頭剪影裝飾 */
+        .avatar-box .dog-ears {
+            width: 100px;
+            height: 100px;
+            background-color: var(--paper-white);
+            border: var(--comic-border);
+            border-radius: 50%;
+            position: relative;
+        }
+        .avatar-box .dog-ears::before {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 60px;
+            background-color: var(--ink-black);
+            border-radius: 20px;
+            top: 20px;
+            left: -10px;
+            transform: rotate(15deg);
+        }
+
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .tag {
+            background-color: var(--snoopy-yellow);
+            border: var(--comic-border);
+            padding: 0.3rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .portfolio-item {
+            background: var(--paper-white);
+            border: var(--comic-border);
+            border-radius: 12px;
+            padding: 1.2rem;
+            box-shadow: 4px 4px 0px var(--ink-black);
+            transition: transform 0.2s;
+        }
+
+        .portfolio-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 6px 6px 0px var(--ink-black);
+        }
+
+        .portfolio-img-placeholder {
+            width: 100%;
+            height: 140px;
+            background-color: var(--snoopy-blue);
+            border: var(--comic-border);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--ink-black);
+        }
+
+        .contact-card-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            margin-top: 1rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            padding: 1.2rem;
+            border: var(--comic-border);
+            border-radius: 12px;
+            background-color: #FFF;
+            box-shadow: 4px 4px 0px var(--ink-black);
+        }
+
+        .contact-icon-box {
+            width: 50px;
+            height: 50px;
+            background-color: var(--snoopy-red);
+            color: white;
+            border: var(--comic-border);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .contact-info label {
+            font-size: 0.85rem;
+            color: #666;
+            font-weight: bold;
+            display: block;
+        }
+
+        .contact-info p, .contact-info a {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--ink-black);
+            text-decoration: none;
+        }
+
+        .contact-info a:hover {
+            color: var(--snoopy-red);
+            text-decoration: underline;
+        }
+
+        footer {
+            background-color: var(--paper-white);
+            border-top: var(--thick-border);
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            font-weight: 700;
+        }
+
+        /* 響應式調整 (手機畫面適應) */
+        @media (max-width: 650px) {
+            .profile-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .header-container {
+                flex-direction: column;
+            }
+            .speech-bubble::after, .speech-bubble::before {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            .contact-item {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 頁面切換控制器的控制選單 (Radio Button 控制) -->
+    <input type="radio" id="tab-about" name="page-tab" checked>
+    <input type="radio" id="tab-portfolio" name="page-tab">
+    <input type="radio" id="tab-contact" name="page-tab">
+
+    <header>
+        <div class="header-container">
+            <a href="#" class="logo">
+                🐾 Charlie & Friends <span class="logo-badge">MY PAGE</span>
+            </a>
+            <nav>
+                <label for="tab-about">關於我</label>
+                <label for="tab-portfolio">作品經歷</label>
+                <label for="tab-contact">聯絡我</label>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <!-- ==================== 第一頁：關於我 ==================== -->
+        <section class="page page-about">
+            
+            <div class="speech-bubble">
+                "Keep looking up... that's the secret of life!" 保持仰望，這就是生活的祕訣！
+            </div>
+
+            <div class="comic-card">
+                <div class="comic-header">
+                    <h2 class="comic-title">🐶 個人簡介 About Me</h2>
+                    <span class="tag" style="background-color: var(--snoopy-blue);">PAGE 01</span>
+                </div>
+
+                <div class="profile-grid">
+                    <div class="avatar-box">
+                        <div class="dog-ears"></div>
+                    </div>
+                    <div>
+                        <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">王小明 (Alex Wang)</h1>
+                        <p style="font-weight: 600; color: var(--snoopy-red); margin-bottom: 1rem;">
+                            追求簡潔與溫暖視覺的網頁設計新手 🎨
+                        </p>
+                        <p>
+                            你好！我是小明。我熱愛經典漫畫的手繪質感與暖色調設計。
+                            目前正在學習 HTML 與 CSS，目標是做出讓人看了會心一笑的溫暖網頁作品。就像史努比躺在狗屋上做夢一樣，我也在程式碼的世界裡探索無限可能！
+                        </p>
+                        
+                        <div class="tag-list">
+                            <span class="tag"># HTML5</span>
+                            <span class="tag"># CSS3 手繪風</span>
+                            <span class="tag"># 視覺設計</span>
+                            <span class="tag"># 史努比愛好者</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="comic-card">
+                <div class="comic-header">
+                    <h3 class="comic-title">⭐ 興趣與專長</h3>
+                </div>
+                <ul style="list-style-type: '🐾 '; padding-left: 1.5rem; font-weight: 600;">
+                    <li style="margin-bottom: 0.5rem;">基礎網頁排版與切板 (純 HTML/CSS)</li>
+                    <li style="margin-bottom: 0.5rem;">插畫風格網頁視覺發想</li>
+                    <li style="margin-bottom: 0.5rem;">喜愛品嚐咖啡與閱讀美式經典漫畫</li>
+                </ul>
+            </div>
+        </section>
+
+
+        <!-- ==================== 第二頁：作品經歷 ==================== -->
+        <section class="page page-portfolio">
+            
+            <div class="speech-bubble">
+                "It's a mistake to try to avoid mistakes." 試圖避免錯誤本身就是個錯誤，勇敢嘗試我的作品吧！
+            </div>
+
+            <div class="comic-card">
+                <div class="comic-header">
+                    <h2 class="comic-title">🖼️ 作品與學習歷程 Portfolio</h2>
+                    <span class="tag" style="background-color: var(--snoopy-yellow);">PAGE 02</span>
+                </div>
+
+                <div class="portfolio-grid">
+                    
+                    <!-- 作品 1 -->
+                    <div class="portfolio-item">
+                        <div class="portfolio-img-placeholder" style="background-color: var(--snoopy-yellow);">
+                            🏠 狗屋風專案
+                        </div>
+                        <h3 style="margin-bottom: 0.5rem;">個人卡片網頁</h3>
+                        <p style="font-size: 0.95rem;">使用純 CSS 打造漫畫風格的卡片與對話框，呈現溫暖手繪感。</p>
+                    </div>
+
+                    <!-- 作品 2 -->
+                    <div class="portfolio-item">
+                        <div class="portfolio-img-placeholder" style="background-color: var(--snoopy-blue);">
+                            🐥 胡士托筆記
+                        </div>
+                        <h3 style="margin-bottom: 0.5rem;">學習筆記部落格</h3>
+                        <p style="font-size: 0.95rem;">紀錄初學者學習 HTML 和 CSS 的心得，練習各種排版技巧。</p>
+                    </div>
+
+                    <!-- 作品 3 -->
+                    <div class="portfolio-item">
+                        <div class="portfolio-img-placeholder" style="background-color: #FFC6FF;">
+                            🎪 漫畫展覽簡介頁
+                        </div>
+                        <h3 style="margin-bottom: 0.5rem;">復古活動宣傳頁</h3>
+                        <p style="font-size: 0.95rem;">練習多欄位響應式排版 (CSS Grid)，適應手機與電腦螢幕。</p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== 第三頁：聯絡我 ==================== -->
+        <section class="page page-contact">
+            
+            <div class="speech-bubble">
+                "A friend is someone who knows all your faults, and loves you anyway." 隨時歡迎透過以下方式聯絡我！
+            </div>
+
+            <div class="comic-card">
+                <div class="comic-header">
+                    <h2 class="comic-title">📞 聯絡資訊 Contact Me</h2>
+                    <span class="tag" style="background-color: var(--snoopy-red); color: white;">PAGE 03</span>
+                </div>
+
+                <p style="margin-bottom: 1.5rem; font-weight: 600;">
+                    如果您對我的作品感興趣，或是有任何網頁設計的合作想法，非常歡迎直接與我聯繫：
+                </p>
+
+                <!-- 聯絡資訊卡片清單 (無表單) -->
+                <div class="contact-card-list">
+                    
+                    <!-- 姓名 -->
+                    <div class="contact-item">
+                        <div class="contact-icon-box">👤</div>
+                        <div class="contact-info">
+                            <label>聯絡人姓名 Name</label>
+                            <p>王小明 (Alex Wang)</p>
+                        </div>
+                    </div>
+
+                    <!-- 電話 -->
+                    <div class="contact-item">
+                        <div class="contact-icon-box" style="background-color: var(--snoopy-yellow); color: var(--ink-black);">📱</div>
+                        <div class="contact-info">
+                            <label>電話號碼 Phone</label>
+                            <p><a href="tel:0912345678">0912-345-678</a></p>
+                        </div>
+                    </div>
+
+                    <!-- 電子郵件 -->
+                    <div class="contact-item">
+                        <div class="contact-icon-box" style="background-color: var(--snoopy-blue); color: var(--ink-black);">✉️</div>
+                        <div class="contact-info">
+                            <label>電子郵件 Email</label>
+                            <p><a href="mailto:alex.wang@example.com">alex.wang@example.com</a></p>
+                        </div>
+                    </div>
+
+                    <!-- 社群/地區 -->
+                    <div class="contact-item">
+                        <div class="contact-icon-box" style="background-color: #A2D2FF; color: var(--ink-black);">📍</div>
+                        <div class="contact-info">
+                            <label>居住地區 / 社群 Location</label>
+                            <p>台灣台北市 (Taipei, Taiwan)</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>© 2026 Designed with 🐾 & Pure HTML/CSS | Snoopy Inspired Theme</p>
+    </footer>
+
+</body>
+</html>
