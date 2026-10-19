@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>好時光義式冰淇淋 Gelato Bar</title>
+    <style>
+        /* --- CSS Reset & Global Vars --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* 參考圖片採用的溫暖大地色與鮮豔紅組合 */
+            --bg-neutral: #BDB09E;      /* 沙漠金/大地駝色背景 */
+            --accent-red: #D8230A;      /* 鮮豔亮紅 */
+            --accent-red-hover: #b51c06;
+            --card-bg: #FFFFFF;
+            --text-dark: #2B2625;      /* 深褐色文字 */
+            --text-light: #FFFFFF;
+            --text-muted: #665E58;
+            --border-color: #D6CBBC;
+            --font-family: 'PingFang TC', 'Microsoft JhengHei', -apple-system, sans-serif;
+            --transition-speed: 0.3s;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-neutral);
+            color: var(--text-dark);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* --- Header & Navigation --- */
+        header {
+            background-color: var(--bg-neutral);
+            position: sticky;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: var(--text-dark);
+            text-decoration: none;
+            letter-spacing: 1px;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 1.05rem;
+            transition: color var(--transition-speed);
+            cursor: pointer;
+            padding: 0.4rem 0;
+            position: relative;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--accent-red);
+        }
+
+        /* 聯絡我們膠囊按鈕樣式 (參考圖片右上角) */
+        .nav-links a.btn-contact-nav {
+            background-color: var(--accent-red);
+            color: white;
+            padding: 0.5rem 1.6rem;
+            border-radius: 30px;
+            font-weight: bold;
+        }
+
+        .nav-links a.btn-contact-nav:hover {
+            background-color: var(--accent-red-hover);
+            color: white;
+        }
+
+        /* --- Page Layout Logic --- */
+        .page {
+            display: none;
+            padding: 2rem 1.5rem 4rem 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Hero Section (Home Page) --- */
+        .hero-banner {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--text-dark);
+        }
+
+        .hero-title-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* 品牌 Logo 圖片放置位置 */
+        .brand-logo-img {
+            max-width: 280px;
+            width: 100%;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            object-fit: cover;
+        }
+
+        .hero-banner h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        .hero-banner p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 1.5rem auto;
+            color: #4A423B;
+            font-weight: 500;
+        }
+
+        /* --- Section Titles --- */
+        .section-title {
+            text-align: center;
+            font-size: 2.2rem;
+            color: var(--text-dark);
+            margin-bottom: 2.5rem;
+            font-weight: 800;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background-color: var(--accent-red);
+            margin: 0.6rem auto 0 auto;
+            border-radius: 2px;
+        }
+
+        /* --- Grid & Photo Cards Layout --- */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .photo-card {
+            background-color: var(--card-bg);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .photo-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .photo-card-img-wrapper {
+            width: 100%;
+            height: 280px;
+            overflow: hidden;
+            position: relative;
+            background-color: #E8E2D9;
+        }
+
+        .photo-card-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .photo-card:hover .photo-card-img-wrapper img {
+            transform: scale(1.05);
+        }
+
+        .photo-card-body {
+            padding: 1.8rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .photo-card-body h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
+            color: var(--text-dark);
+        }
+
+        .photo-card-body p {
+            color: var(--text-muted);
+            font-size: 0.98rem;
+            line-height: 1.6;
+        }
+
+        /* --- Story Page Specifics --- */
+        .story-container {
+            background: white;
+            padding: 3.5rem;
+            border-radius: 28px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .story-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .story-text h3 {
+            font-size: 1.8rem;
+            color: var(--accent-red);
+            margin-bottom: 1.2rem;
+        }
+
+        .story-text p {
+            margin-bottom: 1.2rem;
+            color: var(--text-dark);
+            font-size: 1.05rem;
+        }
+
+        .story-image-box {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            height: 380px;
+        }
+
+        .story-image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* --- Menu Page (9 Items Grid) --- */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .menu-item {
+            background-color: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            transition: transform var(--transition-speed);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .menu-thumb {
+            height: 220px;
+            width: 100%;
+            overflow: hidden;
+            background-color: #E8E2D9;
+        }
+
+        .menu-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .menu-item:hover .menu-thumb img {
+            transform: scale(1.05);
+        }
+
+        .menu-info {
+            padding: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .menu-tag {
+            display: inline-block;
+            background-color: var(--accent-red);
+            color: white;
+            padding: 0.2rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 0.6rem;
+        }
+
+        .menu-info h4 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .menu-info p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        /* --- Contact Page (Personal Information Layout) --- */
+        .contact-card {
+            background: white;
+            border-radius: 28px;
+            padding: 3.5rem;
+            max-width: 750px;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .avatar-box {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            margin: 0 auto 1.2rem auto;
+            overflow: hidden;
+            border: 4px solid var(--accent-red);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .avatar-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .contact-info-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.2rem 1.8rem;
+            background-color: #F8F5F0;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .contact-icon {
+            font-size: 1.6rem;
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            color: var(--accent-red);
+        }
+
+        .contact-details h4 {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .contact-details p {
+            font-size: 1.15rem;
+            font-weight: bold;
+            color: var(--text-dark);
+        }
+
+        .contact-note {
+            margin-top: 2.5rem;
+            text-align: center;
+            padding-top: 1.8rem;
+            border-top: 1px dashed var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* --- Footer --- */
+        footer {
+            background-color: var(--accent-red);
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 4rem;
+            font-size: 0.95rem;
+        }
+
+        /* --- Responsive Styles --- */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1.2rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+                font-size: 0.95rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .hero-banner h1 {
+                font-size: 2.2rem;
+            }
+
+            .story-content {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-card {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Header -->
+    <header>
+        <div class="nav-container">
+            <!-- 已取消冰淇淋 Emoji 圖案 -->
+            <a class="logo" onclick="showPage('home')">
+                好時光義式冰淇淋
+            </a>
+            <ul class="nav-links">
+                <li><a id="nav-home" class="active" onclick="showPage('home')">首頁</a></li>
+                <li><a id="nav-story" onclick="showPage('story')">品牌故事</a></li>
+                <li><a id="nav-menu" onclick="showPage('menu')">經典冰品</a></li>
+                <li><a id="nav-contact" class="btn-contact-nav" onclick="showPage('contact')">聯絡我</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- PAGE 1: HOME -->
+    <main id="page-home" class="page active">
+        <section class="hero-banner">
+            <div class="hero-title-container">
+                <!-- 首頁新增之 Logo 相片位置 -->
+                <img src="https://placehold.co/400x200/D8230A/FFFFFF?text=Gelato+Bar" alt="好時光冰淇淋 Logo" class="brand-logo-img" onerror="this.src='https://via.placeholder.com/400x200?text=Gelato+Bar'">
+            </div>
+            <h1>用純粹的原味，呈現好時光</h1>
+            <p>堅持每日新鮮現做，低脂肪、低空氣含量。每一口都是來自天然食材的純粹感動。</p>
+        </section>
+
+        <h2 class="section-title">好時光的堅持</h2>
+
+        <!-- 首頁三個欄位改為相片格式 -->
+        <div class="grid-3">
+            <div class="photo-card">
+                <div class="photo-card-img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1501443762994-82bd5dace89a?q=80&w=800&auto=format&fit=crop" alt="嚴選天然食材" onerror="this.src='https://placehold.co/600x400/D8230A/FFFFFF?text=Natural+Ingredients'">
+                </div>
+                <div class="photo-card-body">
+                    <h3>嚴選天然食材</h3>
+                    <p>拒絕人工香精與色素，嚴選在地小農新鮮水果與進口高品質優質原料。</p>
+                </div>
+            </div>
+
+            <div class="photo-card">
+                <div class="photo-card-img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1563805042-7684c019e1cb?q=80&w=800&auto=format&fit=crop" alt="低脂輕負擔" onerror="this.src='https://placehold.co/600x400/D8230A/FFFFFF?text=Low+Fat+Gelato'">
+                </div>
+                <div class="photo-card-body">
+                    <h3>低脂輕負擔</h3>
+                    <p>遵循正統義式 Gelato 製程，乳脂肪含量低於 8%，美味享用無負擔。</p>
+                </div>
+            </div>
+
+            <div class="photo-card">
+                <div class="photo-card-img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1570197788417-0e82375c9371?q=80&w=800&auto=format&fit=crop" alt="職人每日手工" onerror="this.src='https://placehold.co/600x400/D8230A/FFFFFF?text=Handcrafted+Daily'">
+                </div>
+                <div class="photo-card-body">
+                    <h3>職人每日手工</h3>
+                    <p>每天早晨新鮮手工現做，精準掌握空氣比例，打造極致細緻綿密口感。</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- PAGE 2: BRAND STORY -->
+    <main id="page-story" class="page">
+        <h2 class="section-title">品牌故事</h2>
+        <div class="story-container">
+            <div class="story-content">
+                <div class="story-text">
+                    <h3>關於「好時光 Good Time Gelato」</h3>
+                    <p>好時光的誕生，源自於一段在義大利小鎮對甜點的深刻記憶。那是一份不喧嘩、不浮誇，卻能打動人心的美好滋味。</p>
+                    <p>我們相信，冰淇淋不只是消暑的甜品，更是凝聚歡笑與時光的載體。回到台灣後，我們結合了義大利傳承的工藝與台灣豐饒的水果，打造出屬於這塊土地的獨特風味。</p>
+                    <p>希望每一次嚐到好時光，都能為您平凡的日常點綴一絲甜美與療癒。</p>
+                </div>
+                <div class="story-image-box">
+                    <img src="https://images.unsplash.com/photo-1557142046-c704a3adf364?q=80&w=800&auto=format&fit=crop" alt="品牌故事相片" onerror="this.src='https://placehold.co/800x600/D8230A/FFFFFF?text=Our+Story'">
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- PAGE 3: MENU & FLAVORS (增加了至 9 項照片格式) -->
+    <main id="page-menu" class="page">
+        <h2 class="section-title">熱門口味與甜點</h2>
+        <div class="menu-grid">
+
+            <!-- 品項 1 -->
+            <div class="menu-item">
+                <div class="menu-thumb">
+                    <img src="https://images.unsplash.com/photo-1468971050039-be99497410af?q=80&w=800&auto=format&fit=crop" alt="大湖草莓雪酪" onerror="this.src='https://placehold.co/600x400/D8230A/FFFFFF?text=Strawberry+Sorbet'">
+                </div>
+                <div class="menu-info">
+                    <span class="menu-tag">熱銷推薦</span>
+                    <h4>大湖草莓雪酪 Sorbet</h4>
+                    <p>嚴選苗栗大湖新鮮草莓，不含任何乳製品，酸甜果香純粹迷人。</p>
+                </div>
+            </div>
+
+            <!-- 品項 2 -->
+            <div class="menu-item">
+                <div class="menu-thumb">
+                    <img src="https://images.unsplash.com/photo-1579954115545-a95591f28bfc?q=80&w=800&auto=format&fit=crop" alt="西西里開心果" onerror="this.src='https://placehold.co/600x400/D8230A/FFFFFF?text=Pistachio+Gelato'">
+                </div>
+                <div class="menu-info">
+                    <span class="menu-tag">主廚招牌</span>
+                    <h4>西西里開心果 Gelato</h4>
+                    <p>選用義大利西西里島開心果醬，濃郁堅果香氣，口感極致滑順。</p>
+                </div>
+            </div>
+
+            <!-- 品項 3 -->
+            <div class="menu-item">
+                <div class="menu-thumb">
+                    <img src="https://images.unsplash.com/photo-1580915411954-282cb1b0d780?q=80&w=800&auto=format&fit=crop" alt="72% 苦甜黑巧克力" onerror="this.src='https://placehold.co/600x400/D8230A/FFFFFF?text=Dark+Chocolate'">
+                </div>
+                <div class="menu-info">
+                    <span class="menu-tag">大人系經典</span>
+                    <h4>72% 苦甜黑巧克力</h4>
+                    <p>嚴選頂級法芙娜巧克力，濃郁苦甜平衡，餘韻悠長。</p>
+                </div>
+            </div>
+
+            <!-- 品項 4 -->
+            <div class="menu-item">
+                <div class="menu-thumb">
+                    <img src="https://images.unsplash.com/photo-1505394033641-40c6ad1178d7?q=80&w=800&auto=format&fit=crop" alt="京都宇治抹茶" onerror="this.src='https://placehold.co/600x400/D8230A/FFFFFF?text=Matcha+Gelato'">
+                </div>
+                <div class="menu-info">
+                    <span class="menu-tag">季節限定</span>
+                    <h4>京都宇治抹茶 Gelato</h4>
+                    <p>選用日本京都宇治抹茶粉，茶香濃厚帶微苦，回甘持久。</p>
+                </div>
+            </div>
+
+            <!-- 品項 5 -->
+            <div class="menu-item">
+                <div class="menu-thumb">
+                    <img src="https://images.unsplash.com/photo-1534706936160-d5ee67737249?q=80&w=800&auto=format&fit=crop" alt="馬達加斯加香草" onerror="this.src='https://placehold.co/600x400/D8230A/FFFFFF?text=Vanilla+Bean'">
+                </div>
+                <div class="menu-info">
+                    <span class="menu-tag">經典必點</span>
+                    <h4>馬達加斯加香草 Gelato</h4>
+                    <p>滿滿優質香草籽，乳香濃郁純粹，老少咸宜的最愛。</p>
+                </div>
+            </div>
+
+            <!-- 品項 6 -->
+            <div class="menu-item">
+                <div class="menu-thumb">
+                    <img src="https://images.unsplash.com/photo-1553177595-4de2bb0842b9?q=80&w=800&auto=format&fit=crop" alt="愛文芒果雪酪" onerror="this.src='https://placehold.co/600x400/D8230A/FFFFFF?text=Mango+Sorbet'">
+                </div>
+                <div class="menu-info">
+                    <span class="menu-tag">夏日限定</span>
+                    <h4>愛文芒果雪酪 Sorbet</h4>
+                    <p>採用台南玉井盛產愛文芒果，爆汁甜美，最消暑的熱帶滋味。</p>
+                </div>
+            </div>
+
+            <!-- 品項 7 -->
+            <div class="menu-item">
+                <div class="menu-thumb">
+                    <img src="https://images.unsplash.com/photo-1560008511-11c63416e52d?q=80&w=800&auto=format&fit=crop" alt="焦糖海鹽焦糖" onerror="this.src='https://placehold.co/600x400/D8230A/FFFFFF?text=Salted+Caramel'">
+                </div>
+                <div class="menu-info">
+                    <span class="menu-tag">人氣激推</span>
+                    <h4>海洋焦糖海鹽 Gelato</h4>
+                    <p>手工熬煮深焦糖搭配法國鹽之花，鹹甜交織，層次感極佳。</p>
+                </div>
+            </div>
+
+            <!-- 品項 8 -->
+            <div class="menu-item">
+                <div class="menu-thumb">
+                    <img src="https://images.unsplash.com/photo-1570197788417-0e82375c9371?q=80&w=800&auto=format&fit=crop" alt="提拉米蘇" onerror="this.src='https://placehold.co/600x400/D8230A/FFFFFF?text=Tiramisu'">
+                </div>
+                <div class="menu-info">
+                    <span class="menu-tag">義式風情</span>
+                    <h4>經典提拉米蘇 Gelato</h4>
+                    <p>融入濃縮咖啡與馬斯卡彭起司，撒上無糖可可粉，浪漫還原經典。</p>
+                </div>
+            </div>
+
+            <!-- 品項 9 -->
+            <div class="menu-item">
+                <div class="menu-thumb">
+                    <img src="https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?q=80&w=800&auto=format&fit=crop" alt="藍莓優格" onerror="this.src='https://placehold.co/600x400/D8230A/FFFFFF?text=Blueberry+Yogurt'">
+                </div>
+                <div class="menu-info">
+                    <span class="menu-tag">清爽推薦</span>
+                    <h4>野莓優格 Gelato</h4>
+                    <p>特調希臘優格搭配自家熬製綜合野莓醬，微酸清爽無負擔。</p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- PAGE 4: CONTACT INFO -->
+    <main id="page-contact" class="page">
+        <h2 class="section-title">聯絡我</h2>
+        <div class="contact-card">
+            <div class="profile-header">
+                <div class="avatar-box">
+                    <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?q=80&w=400&auto=format&fit=crop" alt="創辦人照片" onerror="this.src='https://placehold.co/200x200/D8230A/FFFFFF?text=Founder'">
+                </div>
+                <h3>創辦人 / 總監個人資訊</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">歡迎商業合作、品牌採購或外燴活動洽詢</p>
+            </div>
+
+            <ul class="contact-info-list">
+                <li class="contact-item">
+                    <div class="contact-icon">👤</div>
+                    <div class="contact-details">
+                        <h4>姓名 Name</h4>
+                        <p>陳小明 (Alex Chen)</p>
+                    </div>
+                </li>
+
+                <li class="contact-item">
+                    <div class="contact-icon">📞</div>
+                    <div class="contact-details">
+                        <h4>聯絡電話 Phone</h4>
+                        <p>0912-345-678 / (02) 2345-6789</p>
+                    </div>
+                </li>
+
+                <li class="contact-item">
+                    <div class="contact-icon">✉️</div>
+                    <div class="contact-details">
+                        <h4>電子郵件 Email</h4>
+                        <p>alex.chen@goodtime-gelato.com</p>
+                    </div>
+                </li>
+
+                <li class="contact-item">
+                    <div class="contact-icon">📍</div>
+                    <div class="contact-details">
+                        <h4>概念店地址 Address</h4>
+                        <p>台北市大安區甜點路 100 號 1 樓</p>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="contact-note">
+                <p>⏰ 營業時間：週二至週日 12:00 - 20:00（週一公休）</p>
+                <p>如需預訂大量盒裝冰淇淋，請隨時透過電話或 Email 與我聯繫！</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 好時光義式冰淇淋 Good Time Gelato. All rights reserved.</p>
+    </footer>
+
+    <!-- Simple Navigation Script -->
+    <script>
+        function showPage(pageId) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Show selected page
+            const selectedPage = document.getElementById('page-' + pageId);
+            if (selectedPage) {
+                selectedPage.classList.add('active');
+            }
+
+            // Update active state in nav
+            const navLinks = document.querySelectorAll('.nav-links a');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+
+            const activeNav = document.getElementById('nav-' + pageId);
+            if (activeNav) {
+                activeNav.classList.add('active');
+            }
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
